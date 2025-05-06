@@ -8,6 +8,9 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@canvasjs/charts": "^3.12.13",
+    "@canvasjs/vue-charts": "^1.0.4",
+    "chart.js": "^4.4.9",
     "core-js": "^3.8.3",
     "vue": "^3.2.13"
   },
