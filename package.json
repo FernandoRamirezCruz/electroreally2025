@@ -10,9 +10,13 @@
   "dependencies": {
     "@canvasjs/charts": "^3.12.13",
     "@canvasjs/vue-charts": "^1.0.4",
+    "apexcharts": "^4.7.0",
+    "axios": "^1.9.0",
     "chart.js": "^4.4.9",
     "core-js": "^3.8.3",
-    "vue": "^3.2.13"
+    "jquery": "^3.7.1",
+    "vue": "^3.2.13",
+    "vue3-apexcharts": "^1.8.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
