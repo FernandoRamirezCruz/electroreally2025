@@ -9,7 +9,7 @@ export default {
   data() {
     return {
       // Config ESP32
-      esp32Ip: "192.168.43.47",
+      esp32Ip: "192.168.43.16",
 
       // Último valor recibido de la ESP32
       newFly: 0,
@@ -19,10 +19,19 @@ export default {
       allSpidersData: [],
       allXValues: [],
 
+      // Vector cíclico de 100 números (valores proporcionados)
+      spiderPattern: [
+        447, 448, 447, 446, 445, 448, 445, 447, 447, 448, 447, 447, 445, 446, 447, 447, 446, 448, 446, 446,
+        448, 445, 447, 447, 448, 446, 447, 448, 448, 446, 446, 446, 448, 447, 435, 437, 435, 435, 435, 437,
+        436, 435, 435, 437, 438, 434, 436, 435, 437, 434, 435, 434, 436, 436, 435, 433, 434, 435, 435, 437,
+        435, 435, 433, 434, 435, 433, 435, 435
+      ],
+      spiderIndex: 0, // Índice actual del vector
+
       // Series y opciones del chart
       series: [
-        { name: "Flies", data: [] },
-        { name: "Spiders", data: [] },
+        { name: "Agua(datos recabados)", data: [] },
+        { name: "Actual", data: [] },
       ],
       chartOptions: {
         chart: {
@@ -39,10 +48,10 @@ export default {
         stroke: { width: [2, 2], curve: "straight" },
         yaxis: {
           min: 0,
-          max: 4095,
-          tickAmount: Math.floor(4095 / 300),
+          max: 750,
+          tickAmount: Math.floor(10),
           labels: { formatter: (v) => Math.round(v) },
-          title: { text: "Value" },
+          title: { text: "Sensor UV" },
         },
         xaxis: {
           type: "numeric",
@@ -85,11 +94,14 @@ export default {
     addDataPoint() {
       if (!this.isRunning) return;
 
-      const newSpider = Math.floor(Math.random() * 4096);
-      const newIndex = this.allXValues.length + 1;
+      // Obtener el número cíclico del vector
+      const newSpider = this.spiderPattern[this.spiderIndex];
+      this.spiderIndex = (this.spiderIndex + 1) % this.spiderPattern.length; // Reiniciar índice si llega al final
 
+      const newIndex = this.allXValues.length + 1;
       this.allFliesData.push(this.newFly);
       this.allSpidersData.push(newSpider);
+
       this.allXValues.push(newIndex);
 
       // Mantén ventana deslizante y paginación
@@ -104,8 +116,8 @@ export default {
       const end = start + this.pageSize;
 
       this.series = [
-        { name: "Flies", data: this.allFliesData.slice(start, end) },
-        { name: "Spiders", data: this.allSpidersData.slice(start, end) },
+        { name: "Datos Actuales", data: this.allFliesData.slice(start, end) },
+        { name: "Aguas destilada", data: this.allSpidersData.slice(start, end) },
       ];
       this.chartOptions = {
         ...this.chartOptions,
@@ -145,7 +157,7 @@ export default {
 
 <template>
   <div id="wrapper">
-    <h2 id="chart-title">Fly and Spider Detection Chart</h2>
+    <h2 id="chart-title">Graficas de deteccion de Rayos UV</h2>
     <div id="chart-container">
       <apexchart
         type="line"
